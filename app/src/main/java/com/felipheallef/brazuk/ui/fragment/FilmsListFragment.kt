@@ -72,7 +72,7 @@ class FilmsListFragment : Fragment() {
                     LinearLayoutManager.HORIZONTAL,
                     false
                 )
-                rvFilms.adapter = FilmItemAdapter(filmList)
+                rvFilms.adapter = FilmItemAdapter(filmList, fragmentManager!!)
             }
         })
 

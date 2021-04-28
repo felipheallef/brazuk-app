@@ -5,13 +5,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.data.model.FilmCategory
 
 
-class FilmCategoryItemAdapter(private val context: Context, private val categories: List<FilmCategory>) :
+class FilmCategoryItemAdapter(
+    private val context: Context,
+    private val categories: List<FilmCategory>,
+    private val manager: FragmentManager) :
     RecyclerView.Adapter<FilmCategoryItemAdapter.ViewHolder>() {
 
     /**
@@ -49,7 +53,7 @@ class FilmCategoryItemAdapter(private val context: Context, private val categori
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        viewHolder.rvFilms.adapter = FilmItemAdapter(categories[position].films)
+        viewHolder.rvFilms.adapter = FilmItemAdapter(categories[position].films, manager)
     }
 
     // Return the size of your dataset (invoked by the layout manager)

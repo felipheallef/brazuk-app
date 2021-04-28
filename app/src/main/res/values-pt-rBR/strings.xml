@@ -12,4 +12,7 @@
     <string name="login_failed">"Login failed"</string>
 
     <string name="more">Mais</string>
+    <string name="action_watch">Assistir</string>
+    <string name="action_download">Baixar</string>
+    <string name="content_description_film_cover">Film Cover</string>
 </resources>

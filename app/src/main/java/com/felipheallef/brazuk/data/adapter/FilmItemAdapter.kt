@@ -9,12 +9,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.data.model.Film
+import com.felipheallef.brazuk.ui.fragment.FilmBottomSheetFragment
 
-class FilmItemAdapter(private val films: List<Film>) :
+class FilmItemAdapter(
+    private val films: List<Film>,
+    private val manager: FragmentManager) :
     RecyclerView.Adapter<FilmItemAdapter.ViewHolder>() {
 
     lateinit var context: Context
@@ -29,9 +33,7 @@ class FilmItemAdapter(private val films: List<Film>) :
 
         init {
             // Define click listener for the ViewHolder's View.
-            ivFilmCover.setOnClickListener {
-                Log.i("TAG", "Film Clicked.")
-            }
+
         }
     }
 
@@ -53,6 +55,12 @@ class FilmItemAdapter(private val films: List<Film>) :
         // contents of the view with that element
         viewHolder.textView.text = films[position].title
         val slug = films[position].slug
+
+        viewHolder.ivFilmCover.setOnClickListener {
+            FilmBottomSheetFragment.getInstance(films[position]).apply {
+                this.show(manager, tag)
+            }
+        }
 
         Glide
             .with(context)
