@@ -13,6 +13,8 @@
     <string name="more">More</string>
     <string name="action_watch">Watch</string>
     <string name="action_download">Download</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
 
     <string name="placeholder_film_title" translatable="false">Alma Augusta</string>
     <string name="placeholder_film_description" translatable="false">O poeta Augusto dos Anjos (Josinaldo Ferreira) vive com sua esposa Esther Fialho (Dayanny Gleycy) e os filhos em Leopoldina. Depois de peregrinar pela Paraíba e pelo Rio, ele consegue um bom trabalho em Minas Gerais. Mas uma pneumonia o acomete. E em poucos meses, a alegria do novo lar se transforma em pesadelo.</string>

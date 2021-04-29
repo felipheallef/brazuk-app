@@ -13,8 +13,10 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.api.service.CatalogService
 import com.felipheallef.brazuk.api.service.FilmResponse
+import com.felipheallef.brazuk.data.adapter.FilmCategoryItemAdapter
 import com.felipheallef.brazuk.data.adapter.FilmItemAdapter
 import com.felipheallef.brazuk.data.model.Film
+import com.felipheallef.brazuk.data.model.FilmCategory
 import com.felipheallef.brazuk.util.NetworkUtils
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,6 +27,8 @@ class FilmsListFragment : Fragment() {
     lateinit var shimmerFrameLayout: ShimmerFrameLayout
     lateinit var filmList: List<Film>
     lateinit var rvFilms: RecyclerView
+
+    var filmsCategory: MutableList<FilmCategory> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,14 +69,16 @@ class FilmsListFragment : Fragment() {
                 shimmerFrameLayout.visibility = View.GONE
 
                 filmList = response.body()?.data!!
+                filmsCategory.add(FilmCategory("Seus filmes", filmList))
 
                 rvFilms.setHasFixedSize(true)
                 rvFilms.layoutManager = LinearLayoutManager(
                     context,
-                    LinearLayoutManager.HORIZONTAL,
+                    LinearLayoutManager.VERTICAL,
                     false
                 )
                 rvFilms.adapter = FilmItemAdapter(filmList, fragmentManager!!)
+                rvFilms.adapter = FilmCategoryItemAdapter(filmsCategory, fragmentManager!!)
             }
         })
 

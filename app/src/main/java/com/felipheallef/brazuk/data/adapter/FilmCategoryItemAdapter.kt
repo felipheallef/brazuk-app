@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,21 +14,21 @@ import com.felipheallef.brazuk.data.model.FilmCategory
 
 
 class FilmCategoryItemAdapter(
-    private val context: Context,
     private val categories: List<FilmCategory>,
     private val manager: FragmentManager) :
     RecyclerView.Adapter<FilmCategoryItemAdapter.ViewHolder>() {
 
+    lateinit var context: Context
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val rvFilms: RecyclerView
+        val rvFilms: RecyclerView = view.findViewById(R.id.recycler_view_list)
+        val txtCategoryName: TextView = view.findViewById(R.id.txt_category_name)
 
         init {
             // Define click listener for the ViewHolder's View.
-            rvFilms = view.findViewById(R.id.recycler_view_list)
         }
     }
 
@@ -37,7 +38,7 @@ class FilmCategoryItemAdapter(
 
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.item_list_film_category, viewGroup, false)
-
+        context = viewGroup.context
         return ViewHolder(view)
     }
 
@@ -46,7 +47,7 @@ class FilmCategoryItemAdapter(
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-//        viewHolder.textView.text = dataSet[position]
+        viewHolder.txtCategoryName.text = categories[position].title
         viewHolder.rvFilms.setHasFixedSize(true)
         viewHolder.rvFilms.layoutManager = LinearLayoutManager(
             context,
