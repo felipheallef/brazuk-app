@@ -1,3 +1,3 @@
 # Brazuk
 
-Brazuk is a streaming app for Brazilian filmmakers
+Brazuk é um aplicativo de streaming de filmes independentes brasileiros.
