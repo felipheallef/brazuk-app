@@ -19,7 +19,7 @@ class FilmBottomSheetFragment : BottomSheetDialogFragment() {
     lateinit var tvFilmDescription: TextView
 
     override fun getTheme(): Int {
-        return R.style.Theme_MaterialComponents_Light_BottomSheetDialog
+        return R.style.Theme_Brazuk_BottomSheetDialog
     }
 
     override fun onCreateView(

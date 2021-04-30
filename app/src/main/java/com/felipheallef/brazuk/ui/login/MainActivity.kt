@@ -1,16 +1,20 @@
 package com.felipheallef.brazuk.ui.login
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.felipheallef.brazuk.R
 import com.google.android.material.appbar.MaterialToolbar
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var toolbar: MaterialToolbar
+    private lateinit var topAppBar: MaterialToolbar
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set the default theme
@@ -18,8 +22,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toolbar = findViewById(R.id.topAppBar)
-        setSupportActionBar(toolbar)
+        topAppBar = findViewById(R.id.topAppBar)
+        drawerLayout = findViewById(R.id.drawerLayout)
+
+        setSupportActionBar(topAppBar)
+
+        topAppBar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
     }
 

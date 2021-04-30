@@ -1,4 +1,4 @@
-package com.felipheallef.brazuk.ui.login
+package com.felipheallef.brazuk.ui.login.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -17,20 +17,26 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.felipheallef.brazuk.R
+import com.felipheallef.brazuk.ui.login.LoggedInUserView
+import com.felipheallef.brazuk.ui.login.LoginViewModel
+import com.felipheallef.brazuk.ui.login.LoginViewModelFactory
+import com.felipheallef.brazuk.ui.login.MainActivity
+import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Brazuk)
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
-        val login = findViewById<Button>(R.id.login)
-        val loading = findViewById<ProgressBar>(R.id.loading)
+        val username = findViewById<TextInputEditText>(R.id.username)
+        val password = findViewById<TextInputEditText>(R.id.password)
+        val login = findViewById<Button>(R.id.btn_login)
+//        val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
@@ -52,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
+//            loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -92,14 +98,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                loading.visibility = View.VISIBLE
+//                loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
-
-                val i = Intent(applicationContext, MainActivity::class.java).apply {
-                    putExtra("name", "Feliphe Allef")
-                }
-                startActivity(i)
-
             }
         }
     }
@@ -108,11 +108,17 @@ class LoginActivity : AppCompatActivity() {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         // TODO : initiate successful logged in experience
-//        Toast.makeText(
-//                applicationContext,
-//                "$welcome $displayName",
-//                Toast.LENGTH_LONG
-//        ).show()
+        Toast.makeText(
+                applicationContext,
+                "$welcome $displayName",
+                Toast.LENGTH_LONG
+        ).show()
+
+        val i = Intent(applicationContext, MainActivity::class.java).apply {
+            putExtra("name", displayName)
+        }
+        startActivity(i)
+        finish()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
