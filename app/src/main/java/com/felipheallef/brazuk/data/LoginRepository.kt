@@ -32,7 +32,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
     fun login(username: String, password: String){
         // handle login
         dataSource.login(username, password) {
-            if (it?.status == 200) {
+            if (it.status == 200) {
                 setLoggedInUser(it.user)
             }
         }
@@ -42,6 +42,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
+
     }
 
 }
