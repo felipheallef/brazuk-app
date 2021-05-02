@@ -1,5 +1,6 @@
 package com.felipheallef.brazuk.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.felipheallef.brazuk.data.LoginRepository
 import com.felipheallef.brazuk.data.Result
 
 import com.felipheallef.brazuk.R
+import com.felipheallef.brazuk.data.LoginDataSource
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -21,11 +23,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         // can be launched in a separate asynchronous job
         val result = loginRepository.login(username, password)
 
-        if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+        LoginDataSource().login(username, password) {
+
+            if (it.status == 200) {
+                _loginResult.value = LoginResult(success = it.user)
+                loginRepository.setLoggedInUser(it.user)
+            } else {
+                _loginResult.value = LoginResult(error = it.message)
+                Log.i("Login", it.status.toString())
+            }
+
         }
+
     }
 
     fun loginDataChanged(username: String, password: String) {

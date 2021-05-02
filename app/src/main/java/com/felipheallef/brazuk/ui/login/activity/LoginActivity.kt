@@ -15,8 +15,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doAfterTextChanged
 
 import com.felipheallef.brazuk.R
+import com.felipheallef.brazuk.data.model.User
 import com.felipheallef.brazuk.ui.login.LoggedInUserView
 import com.felipheallef.brazuk.ui.login.LoginViewModel
 import com.felipheallef.brazuk.ui.login.LoginViewModelFactory
@@ -36,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<TextInputEditText>(R.id.username)
         val password = findViewById<TextInputEditText>(R.id.password)
         val login = findViewById<Button>(R.id.btn_login)
-//        val loading = findViewById<ProgressBar>(R.id.loading)
+        val loading = findViewById<ConstraintLayout>(R.id.layout_loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
@@ -58,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-//            loading.visibility = View.GONE
+            loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -71,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
 //            finish()
         })
 
-        username.afterTextChanged {
+        username.doAfterTextChanged {
             loginViewModel.loginDataChanged(
                     username.text.toString(),
                     password.text.toString()
@@ -79,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         password.apply {
-            afterTextChanged {
+            doAfterTextChanged {
                 loginViewModel.loginDataChanged(
                         username.text.toString(),
                         password.text.toString()
@@ -98,19 +101,19 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-//                loading.visibility = View.VISIBLE
+                loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    private fun updateUiWithUser(model: User) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         // TODO : initiate successful logged in experience
         Toast.makeText(
                 applicationContext,
-                "$welcome $displayName",
+                "$welcome $displayName!",
                 Toast.LENGTH_LONG
         ).show()
 
@@ -121,22 +124,22 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    private fun showLoginFailed(errorString: String) {
+        Toast.makeText(applicationContext, errorString, Toast.LENGTH_LONG).show()
     }
 }
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
-}
+//fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+//    this.addTextChangedListener(object : TextWatcher {
+//        override fun afterTextChanged(editable: Editable?) {
+//            afterTextChanged.invoke(editable.toString())
+//        }
+//
+//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+//
+//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+//    })
+//}

@@ -1,6 +1,8 @@
 package com.felipheallef.brazuk.data
 
+import com.felipheallef.brazuk.api.service.AccountService
 import com.felipheallef.brazuk.data.model.LoggedInUser
+import com.felipheallef.brazuk.data.model.User
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -10,7 +12,7 @@ import com.felipheallef.brazuk.data.model.LoggedInUser
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    var user: User? = null
         private set
 
     val isLoggedIn: Boolean
@@ -27,20 +29,19 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String){
         // handle login
-        val result = dataSource.login(username, password)
-
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
+        dataSource.login(username, password) {
+            if (it?.status == 200) {
+                setLoggedInUser(it.user)
+            }
         }
-
-        return result
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    fun setLoggedInUser(loggedInUser: User?) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
+
 }

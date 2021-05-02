@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.felipheallef.brazuk.BuildConfig
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.api.service.CatalogService
 import com.felipheallef.brazuk.api.service.FilmResponse
@@ -50,7 +51,7 @@ class FilmsListFragment : Fragment() {
 
     private fun getData() {
         val retrofitClient = NetworkUtils
-            .getRetrofitInstance("https://coprocen-api.herokuapp.com")
+            .getRetrofitInstance(BuildConfig.BASE_URL)
 
         val endpoint = retrofitClient.create(CatalogService::class.java)
         val callback = endpoint.getAllFilms()

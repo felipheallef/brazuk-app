@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.felipheallef.brazuk.BuildConfig
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.data.model.Film
 import com.felipheallef.brazuk.ui.fragment.FilmBottomSheetFragment
@@ -64,7 +65,7 @@ class FilmItemAdapter(
 
         Glide
             .with(context)
-            .load("https://coprocen-api.herokuapp.com/img/films/covers/$slug.jpg")
+            .load(BuildConfig.BASE_URL + "img/films/covers/$slug.jpg")
             .centerCrop()
 //            .placeholder(R.drawable.loading_spinner)
             .into(viewHolder.ivFilmCover)
