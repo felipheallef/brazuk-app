@@ -1,5 +1,6 @@
 package com.felipheallef.brazuk.api.service
 
+import com.felipheallef.brazuk.api.ApiResponse
 import com.felipheallef.brazuk.data.model.User
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
@@ -13,15 +14,6 @@ interface AccountService {
     @POST("/account/login")
     fun login(
         @Field("email") email: String,
-        @Field("password") password: String): Call<Response>
-
-    data class Response(
-        @SerializedName("status")
-        val status: Int,
-        @SerializedName("message")
-        val message: String,
-        @SerializedName("user")
-        val user: User? = null
-    )
+        @Field("password") password: String): Call<ApiResponse<User>>
 
 }

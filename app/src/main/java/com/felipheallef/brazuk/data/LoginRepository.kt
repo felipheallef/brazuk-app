@@ -33,7 +33,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         // handle login
         dataSource.login(username, password) {
             if (it.status == 200) {
-                setLoggedInUser(it.user)
+                setLoggedInUser(it.data)
             }
         }
     }

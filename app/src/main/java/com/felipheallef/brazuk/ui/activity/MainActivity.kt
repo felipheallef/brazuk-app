@@ -1,20 +1,17 @@
-package com.felipheallef.brazuk.ui.login
+package com.felipheallef.brazuk.ui.activity
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
-import android.view.ContextMenu
 import android.view.Menu
-import android.view.View
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.felipheallef.brazuk.R
 import com.felipheallef.brazuk.data.model.User
 import com.felipheallef.brazuk.databinding.ActivityMainBinding
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
@@ -56,6 +53,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                Intent(applicationContext, SettingsActivity::class.java).apply {
+                    startActivity(this)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

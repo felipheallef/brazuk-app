@@ -7,10 +7,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,8 +17,7 @@ import com.felipheallef.brazuk.data.model.User
 import com.felipheallef.brazuk.databinding.ActivityLoginBinding
 import com.felipheallef.brazuk.ui.login.LoginViewModel
 import com.felipheallef.brazuk.ui.login.LoginViewModelFactory
-import com.felipheallef.brazuk.ui.login.MainActivity
-import com.google.android.material.textfield.TextInputEditText
+import com.felipheallef.brazuk.ui.activity.MainActivity
 import com.google.gson.Gson
 
 class LoginActivity : AppCompatActivity() {
@@ -46,11 +43,6 @@ class LoginActivity : AppCompatActivity() {
             updateUiWithUser(user)
         }
 
-        val username = findViewById<TextInputEditText>(R.id.username)
-        val password = findViewById<TextInputEditText>(R.id.password)
-        val login = findViewById<Button>(R.id.btn_login)
-        val loading = findViewById<ConstraintLayout>(R.id.layout_loading)
-
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
 
@@ -58,44 +50,47 @@ class LoginActivity : AppCompatActivity() {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
+            binding.btnLogin.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+                binding.textinputEmail.error = getString(loginState.usernameError)
+            } else {
+                binding.textinputEmail.error = ""
             }
             if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
+                binding.textinputPassword.error = getString(loginState.passwordError)
+            } else {
+                binding.textinputPassword.error = ""
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
-            loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
+            binding.layoutLoading.visibility = View.GONE
+
+            if (loginResult.success) {
+                updateUiWithUser(loginResult.data!!)
+            } else {
+                showLoginFailed(loginResult.error!!.message)
             }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-            }
+
             setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
-//            finish()
         })
 
-        username.doAfterTextChanged {
+        binding.username.doAfterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                binding.username.text.toString(),
+                binding.password.text.toString()
             )
         }
 
-        password.apply {
+        binding.password.apply {
             doAfterTextChanged {
                 loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                    binding.username.text.toString(),
+                    binding.password.text.toString()
                 )
             }
 
@@ -103,49 +98,36 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
+                            binding.username.text.toString(),
+                            binding.password.text.toString()
                         )
                 }
                 false
             }
 
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+            binding.btnLogin.setOnClickListener {
+                binding.layoutLoading.visibility = View.VISIBLE
+                loginViewModel.login(binding.username.text.toString(), binding.password.text.toString())
             }
         }
     }
 
+    // completes login once authentication is successful
     private fun updateUiWithUser(model: User) {
         val prefsEditor = sharedPref.edit()
         val json = Gson().toJson(model)
+
         prefsEditor.putString("loggedUser", json)
         prefsEditor.apply()
 
-        val i = Intent(applicationContext, MainActivity::class.java).apply {
-            putExtra("name", model.displayName)
+        Intent(applicationContext, MainActivity::class.java).apply {
+            startActivity(this)
+            finish()
         }
-        startActivity(i)
-        finish()
+
     }
 
     private fun showLoginFailed(errorString: String) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_LONG).show()
     }
 }
-
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-//fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-//    this.addTextChangedListener(object : TextWatcher {
-//        override fun afterTextChanged(editable: Editable?) {
-//            afterTextChanged.invoke(editable.toString())
-//        }
-//
-//        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-//
-//        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-//    })
-//}
